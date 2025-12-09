@@ -43,18 +43,60 @@ public class Job_Tracker_DataLayer {
     }
 
     public void getApplication(){
-
+        sql = "SELECT * FROM applications";
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                System.out.println("Application ID: " + rs.getInt("id") +
+                                   ", Company: " + rs.getString("company") +
+                                   ", Position: " + rs.getString("position") +
+                                   ", Status: " + rs.getString("status"));
+            }
+        } catch (SQLException sqle) {
+            System.out.println("SQLException!");
+            System.out.println("Error: " + sqle.getMessage());
+        } catch (Exception e) {
+            System.out.println("Exception!");
+            System.out.println("Error: " + e.getMessage());
+        }
     }
 
-    public void addApplication(){
+    public void addApplication(String title, String company, String application_link, Date date_sent, int elapsed_time, String status, String interview_status, String email){
+        sql = "INSERT INTO applications (title, company, application_link, date_sent, elapsed_time, status, interview_status, email) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        try {
+            stmt = conn.prepareStatement(sql);
 
+        } catch (SQLException sqle) {
+            System.out.println("SQLException!");
+            System.out.println("Error: " + sqle.getMessage());
+        } catch (Exception e) {
+            System.out.println("Exception!");
+            System.out.println("Error: " + e.getMessage());
+        }
     }
 
-    public void updateApplication(){
-
+    public void updateApplication(int application_id){
+    
     }
 
-    public void deleteApplication(){
-
+    public void deleteApplication(int application_id){
+        sql = "DELETE FROM applications WHERE application_id = ?";
+        try {
+            stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, application_id);
+            int rowsAffected = stmt.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("Application with ID " + application_id + " deleted successfully.");
+            } else {
+                System.out.println("No application found with ID " + application_id + ".");
+            }
+        } catch (SQLException sqle) {
+            System.out.println("SQLException!");
+            System.out.println("Error: " + sqle.getMessage());
+        } catch (Exception e) {
+            System.out.println("Exception!");
+            System.out.println("Error: " + e.getMessage());
+        }
     }
 }
