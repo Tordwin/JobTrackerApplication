@@ -1,4 +1,3 @@
-package JobTrackerApplication;
 import java.sql.*;
 
 public class Job_Tracker_DataLayer {
@@ -62,11 +61,25 @@ public class Job_Tracker_DataLayer {
         }
     }
 
-    public void addApplication(String title, String company, String application_link, Date date_sent, int elapsed_time, String status, String interview_status, String email){
-        sql = "INSERT INTO applications (title, company, application_link, date_sent, elapsed_time, status, interview_status, email) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    public void addApplication(String title, String company, String summary, String application_link, String date_sent, int elapsed_time, String status, String interview_status, String email){
+        sql = "INSERT INTO applications (`title`, `company`, `summary`, `application_link`, `date_sent`, `elapsed_time`, `status`, `interview_status`, `email`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try {
-            stmt = conn.prepareStatement(sql);
-
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, title);
+            stmt.setString(2, company);
+            stmt.setString(3, summary);
+            stmt.setString(4, application_link);
+            stmt.setString(5, date_sent);
+            stmt.setInt(6, elapsed_time);
+            stmt.setString(7, status);
+            stmt.setString(8, interview_status);
+            stmt.setString(9, email);
+            int rows = stmt.executeUpdate();
+            if (rows > 0) {
+                System.out.println("A new application has been inserted successfully.");
+            } else {
+                System.out.println("Insertion failed.");
+            }
         } catch (SQLException sqle) {
             System.out.println("SQLException!");
             System.out.println("Error: " + sqle.getMessage());
@@ -76,17 +89,35 @@ public class Job_Tracker_DataLayer {
         }
     }
 
-    public void updateApplication(int application_id){
-    
+    public void updateApplication(int application_id, String status){
+        sql = "UPDATE applications SET status = ? WHERE application_id = ?";
+        try {
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, status);
+            stmt.setInt(2, application_id);
+            int rows = stmt.executeUpdate();
+            if (rows > 0) {
+                System.out.println("Application with ID " + application_id + " updated successfully.");
+            } else {
+                System.out.println("No application found with ID " + application_id + ".");
+            }
+        } catch (SQLException sqle) {
+            System.out.println("SQLException!");
+            System.out.println("Error: " + sqle.getMessage());
+        } catch (Exception e) {
+            System.out.println("Exception!");
+            System.out.println("Error: " + e.getMessage());
+
+        }
     }
 
     public void deleteApplication(int application_id){
         sql = "DELETE FROM applications WHERE application_id = ?";
         try {
-            stmt = conn.prepareStatement(sql);
+            PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setInt(1, application_id);
-            int rowsAffected = stmt.executeUpdate();
-            if (rowsAffected > 0) {
+            int rows = stmt.executeUpdate();
+            if (rows > 0) {
                 System.out.println("Application with ID " + application_id + " deleted successfully.");
             } else {
                 System.out.println("No application found with ID " + application_id + ".");
