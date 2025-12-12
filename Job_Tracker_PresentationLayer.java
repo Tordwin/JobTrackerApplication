@@ -47,7 +47,6 @@ public class Job_Tracker_PresentationLayer {
         showMainMenu();
     }
 
-
     private void showMainMenu() {
         JFrame frame = new JFrame("Job Application Tracker - Main Menu");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -64,6 +63,47 @@ public class Job_Tracker_PresentationLayer {
         JButton addButton = new JButton("Add Applications");
         JButton deleteButton = new JButton("Delete Applications");
         JButton updateButton = new JButton("Update Applications");
+
+        for (JButton button : new JButton[]{getButton, addButton, deleteButton, updateButton}) {
+            button.setFont(defaultFont);
+            buttonPanel.add(button);
+        }
+
+        getButton.addActionListener(e -> grabApplication());
+        addButton.addActionListener(e -> insertApplication());
+        deleteButton.addActionListener(e -> removeApplication());
+        updateButton.addActionListener(e -> updateApplication());
+
+        buttonPanel.add(getButton);
+        buttonPanel.add(addButton);
+        buttonPanel.add(deleteButton);
+        buttonPanel.add(updateButton);
+
+        panel.add(title, BorderLayout.NORTH);
+        panel.add(buttonPanel, BorderLayout.CENTER);
+
+        frame.setContentPane(panel);
+        frame.setSize(500,500);
+        frame.setVisible(true);
+    }
+
+    private void grabApplication() {
+        dataLayer.getApplication();
+    }
+
+    private void insertApplication() {
+        // Placeholder for insert application functionality
+        System.out.println("NOT IMPLEMENTED");
+    }
+
+    private void removeApplication() {
+        // Placeholder for delete application functionality
+        System.out.println("NOT IMPLEMENTED");
+    }
+
+    private void updateApplication() {
+        // Placeholder for update application functionality
+        System.out.println("NOT IMPLEMENTED");
     }
 
     public static void main(String[] args) {
