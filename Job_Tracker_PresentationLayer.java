@@ -7,8 +7,11 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableModel;
 
 public class Job_Tracker_PresentationLayer {
     Job_Tracker_DataLayer dataLayer = new Job_Tracker_DataLayer();
@@ -52,12 +55,12 @@ public class Job_Tracker_PresentationLayer {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         JPanel panel = new JPanel();
-        panel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+        panel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
 
         JLabel title = new JLabel("Please select an option from the menu:", SwingConstants.CENTER); 
         title.setFont(defaultFont);
 
-        JPanel buttonPanel = new JPanel(new GridLayout(0, 1, 10, 10));
+        JPanel buttonPanel = new JPanel(new GridLayout(0, 1, 10, 0));
 
         JButton getButton = new JButton("Get Applications");
         JButton addButton = new JButton("Add Applications");
@@ -83,17 +86,36 @@ public class Job_Tracker_PresentationLayer {
         panel.add(buttonPanel, BorderLayout.CENTER);
 
         frame.setContentPane(panel);
-        frame.setSize(500,500);
+        frame.setSize(400, 300);
+        frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
 
     private void grabApplication() {
-        dataLayer.getApplication();
+        // dataLayer.getApplication();
+        DefaultTableModel model = dataLayer.getApplicationsTable();
+        JTable table = new JTable(model);
+        table.setRowHeight(20);
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+        JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.setPreferredSize(new Dimension(800, 400));
+        JOptionPane.showMessageDialog(null, scrollPane, "Applications", JOptionPane.INFORMATION_MESSAGE);
     }
 
     private void insertApplication() {
-        // Placeholder for insert application functionality
-        System.out.println("NOT IMPLEMENTED");
+        JPanel addApplicationBox = new JPanel(new GridLayout(3, 2));
+        JLabel titleInput = new JLabel("Title: ");
+        JLabel companyInput = new JLabel("Company: ");
+        JLabel summaryInput = new JLabel("Summary: ");
+        JLabel applicationLinkInput = new JLabel("Application Link: ");
+        JLabel dateSentInput = new JLabel("Date Sent (YYYY-MM-DD): ");
+        JLabel elapsedTimeInput = new JLabel("Elapsed Time (days): ");
+        JLabel statusInput = new JLabel("Status: ");
+        JLabel interviewStatusInput = new JLabel("Interview Status: ");
+        JLabel emailInput = new JLabel("Email: ");
+
+        // sql = "INSERT INTO applications (`title`, `company`, `summary`, `application_link`, `date_sent`, `elapsed_time`, `status`, `interview_status`, `email`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        dataLayer.addApplication(null, null, null, null, null, 0, null, null, null);
     }
 
     private void removeApplication() {

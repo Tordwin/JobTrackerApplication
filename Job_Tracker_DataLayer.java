@@ -1,5 +1,7 @@
 import java.sql.*;
 
+import javax.swing.table.DefaultTableModel;
+
 public class Job_Tracker_DataLayer {
     private Connection conn;
     private ResultSet rs;
@@ -47,9 +49,9 @@ public class Job_Tracker_DataLayer {
             stmt = conn.createStatement();
             rs = stmt.executeQuery(sql);
             while (rs.next()) {
-                System.out.println("Application ID: " + rs.getInt("id") +
+                System.out.println("Application ID: " + rs.getInt("application_id") +
                                    ", Company: " + rs.getString("company") +
-                                   ", Position: " + rs.getString("position") +
+                                   ", Position: " + rs.getString("title") +
                                    ", Status: " + rs.getString("status"));
             }
         } catch (SQLException sqle) {
@@ -59,6 +61,30 @@ public class Job_Tracker_DataLayer {
             System.out.println("Exception!");
             System.out.println("Error: " + e.getMessage());
         }
+    }
+
+    public DefaultTableModel getApplicationsTable() {
+        String[] cols = {"application_id", "company", "position", "status"};
+        DefaultTableModel model = new DefaultTableModel(cols, 0) {
+            @Override public boolean isCellEditable(int r, int c) { return false; }
+        };
+        String sql = "SELECT application_id, company, title, status FROM applications";
+        try (Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                Object[] row = {
+                    rs.getInt("application_id"),
+                    rs.getString("company"),
+                    rs.getString("title"),
+                    rs.getString("status")
+                };
+                model.addRow(row);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return model;
     }
 
     public void addApplication(String title, String company, String summary, String application_link, String date_sent, int elapsed_time, String status, String interview_status, String email){
@@ -88,6 +114,7 @@ public class Job_Tracker_DataLayer {
             System.out.println("Error: " + e.getMessage());
         }
     }
+    
 
     public void updateApplication(int application_id, String status){
         sql = "UPDATE applications SET status = ? WHERE application_id = ?";
